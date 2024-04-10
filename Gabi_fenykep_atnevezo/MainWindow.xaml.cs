@@ -12,12 +12,16 @@ using System.Windows.Shapes;
 using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 using string_generator;
+using System.Windows.Threading;
 
 
 namespace Gabi_fenykep_atnevezo
 {
     public partial class MainWindow : Window
     {
+        private DispatcherTimer timer;
+        private string mappa_hely;
+        private int kepek;
         public MainWindow()
         {
             InitializeComponent();
@@ -29,14 +33,28 @@ namespace Gabi_fenykep_atnevezo
             bool? ertek = ofd.ShowDialog();
             if (ertek == true)
             {
+                                
                 string mappaneve = ofd.FolderName;
                 TB_Tallozas.Text = mappaneve;
-                Kep_Szam.Content = Kepfajlok(mappaneve)+" db";
+                mappa_hely = mappaneve;
+                atnevezendo_kepek();
+                Kep_Szam.Content = kepek.ToString() + " db";
+
+
+                timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromSeconds(1); // 1 másodperces időköz
+                timer.Tick += Timer_Tick;
+
+                // Időzítő indítása
+                timer.Start();
             }                       
         }
 
+
+
         private void Atnevezes(string mappa_utvonal)
         {
+            mappa_hely = mappa_utvonal;
             bool siker = false;
                 // A mappa összes fájlán végigmegyünk
                 foreach (string regiFajlEleresiUt in Directory.GetFiles(mappa_utvonal))
@@ -64,7 +82,7 @@ namespace Gabi_fenykep_atnevezo
                 }
             if (siker == true)
             {
-                MessageBox.Show("Sikerült átnevezni a mappában lévő " + Kepfajlok(mappa_utvonal) + "db" + " képet!", "Siker!", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Sikerült átnevezni a mappában lévő " + kepek.ToString() + "db" + " képet!", "Siker!", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
@@ -72,7 +90,6 @@ namespace Gabi_fenykep_atnevezo
             }
 
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (TB_Tallozas.Text != "")
@@ -80,6 +97,16 @@ namespace Gabi_fenykep_atnevezo
                 Atnevezes(TB_Tallozas.Text.ToString());
             }
         }
+
+        #region TIMER A KÉP DARABHOZ
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            atnevezendo_kepek();
+            Kep_Szam.Content = kepek.ToString() + " db";
+
+        }
+        #endregion
 
         #region DEBUG GENERALAS
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -102,23 +129,26 @@ namespace Gabi_fenykep_atnevezo
         }
         #endregion
 
-        #region KÉP DARABSZÁM ELLENŐRZÉS
-        private int Kepfajlok(string mappa_utvonal)
+        #region ÁTNEVEZENDŐ KÉP
+        private void atnevezendo_kepek()
         {
-            string[] fajlok = Directory.GetFiles(mappa_utvonal);
-            string[] kepKiterjesztesek = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-            int kepFajlokSzama = 0;
-
-            foreach (string fajl in fajlok)
+            kepek = 0;
+            // A mappa összes fájlán végigmegyünk
+            foreach (string regiFajlEleresiUt in Directory.GetFiles(mappa_hely))
             {
-                string kiterjesztes = System.IO.Path.GetExtension(fajl).ToLower();
-
-                if (Array.Exists(kepKiterjesztesek, element => element == kiterjesztes))
+                if (HaKep(regiFajlEleresiUt))
                 {
-                    kepFajlokSzama++;
+                    // Csak a fájlnév részt különválasztjuk
+                    string fajlNev = System.IO.Path.GetFileNameWithoutExtension(regiFajlEleresiUt);
+
+                    // Ellenőrizzük, hogy a fájlnév hossza nagyobb-e, mint 8
+                    if (fajlNev.Length > 8)
+                    {
+                        kepek += 1;
+                    }
                 }
+
             }
-            return kepFajlokSzama;
         }
         #endregion
 
