@@ -57,7 +57,8 @@
         </Button>
         <Label Content="Átnevezendő képek:" HorizontalAlignment="Left" Margin="24,49,0,0" VerticalAlignment="Top" Width="118"/>
         <Label Content="0 db" HorizontalAlignment="Left" Margin="151,49,0,0" VerticalAlignment="Top" Width="66" HorizontalContentAlignment="Right" Name="Kep_Szam"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="4,5,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="4,5,0,0" VerticalAlignment="Top" Click="Button_Click_1" Visibility="Hidden" IsEnabled="False"/>
+        <Label Content="Label" HorizontalAlignment="Left" VerticalAlignment="Top" Name="Version" FontSize="7"/>
 
     </Grid>
 </Window>

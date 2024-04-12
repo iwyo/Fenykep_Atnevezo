@@ -13,6 +13,7 @@ using System.IO;
 using static System.Net.Mime.MediaTypeNames;
 using string_generator;
 using System.Windows.Threading;
+using VersionChecker;
 
 
 namespace Gabi_fenykep_atnevezo
@@ -22,9 +23,15 @@ namespace Gabi_fenykep_atnevezo
         private DispatcherTimer timer;
         private string mappa_hely;
         private int kepek;
+        private VersionCheck vs = new VersionCheck();
+
         public MainWindow()
         {
             InitializeComponent();
+
+            //Jelen verzió: 1.1
+            vs.VerzioEll(1,1);
+            Version.Content = "1.1";
         }
 
         private void TB_Tallozas_PreviewMouseDown(object sender, RoutedEventArgs e)
@@ -49,9 +56,6 @@ namespace Gabi_fenykep_atnevezo
                 timer.Start();
             }                       
         }
-
-
-
         private void Atnevezes(string mappa_utvonal)
         {
             mappa_hely = mappa_utvonal;

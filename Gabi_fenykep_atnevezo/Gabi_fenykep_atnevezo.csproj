@@ -8,6 +8,18 @@
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>false</UseWindowsForms>
 	<ApplicationIcon>photoicon.ico</ApplicationIcon>
+	<ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	<SignAssembly>False</SignAssembly>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>embedded</DebugType>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
+    <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
   </PropertyGroup>
 
   <ItemGroup>
